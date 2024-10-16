@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Membership Form</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0; /* Light gray background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        #membership-form {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            width: 400px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #4caf50;
+            margin-bottom: 20px;
+        }
+        input[type="text"], input[type="email"], input[type="password"], select, button {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus, select:focus {
+            border-color: #4caf50;
+            outline: none;
+        }
+        button {
+            background: #4caf50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        .message {
+            text-align: center;
+            margin-top: 15px;
+            color: #666;
+        }
+        .fade-in {
+    opacity: 0;
+    transform: translateX(-50px); /* Start from the left */
+    transition: opacity 1s ease-out, transform 1s ease-out;
+}
+
+.fade-in.visible {
+    opacity: 1;
+    transform: translateX(0); /* End at original position */
+}
+
+.fade-in-right {
+    transform: translateX(50px); /* Start from the right */
+}/* From Uiverse.io by MuhammadHasann */ 
+    </style>
+</head>
+<body>
+    <div id="membership-form" class="fade-in">
+        <h2>Join Us!</h2>
+        <form id="form" onsubmit="return submitForm(event)">
+            <input type="text" id="name" required placeholder="Full Name">
+            <input type="email" id="email" required placeholder="Email Address">
+            <input type="text" id="phone" required placeholder="Phone Number">
+            <input type="password" id="password" required placeholder="Password">
+            
+            <label for="paymentMethod">Payment Method:</label>
+            <select id="paymentMethod" required>
+                <option value="" disabled selected>Select a payment method</option>
+                <option value="creditCard">Credit Card</option>
+                <option value="paypal">PayPal</option>
+                <option value="bankTransfer">Bank Transfer</option>
+            </select>
+            
+            <input type="text" id="paymentDetails" required placeholder="Payment Details (e.g., card number or PayPal email)">
+            <button type="submit">Submit</button>
+        </form>
+        <div class="message" id="message"></div>
+    </div>
+
+    <script>
+        function submitForm(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+            const password = document.getElementById('password').value;
+            const paymentMethod = document.getElementById('paymentMethod').value;
+            const paymentDetails = document.getElementById('paymentDetails').value;
+
+            // Here you would typically send this data to your server
+            // For now, we'll just display a success message
+            const messageDiv = document.getElementById('message');
+            messageDiv.textContent = `Welcome, ${name}! Your membership is being processed.`;
+            messageDiv.style.color = "#4caf50"; // Green for success
+            
+            // Reset the form
+            document.getElementById('form').reset();
+        }
+        document.addEventListener("DOMContentLoaded", function () {
+    const fadeInElements = document.querySelectorAll('.fade-in, .fade-in-right');
+
+    const observerOptions = {
+        root: null, // Use the viewport as the root
+        threshold: 0.1 // Trigger when 10% of the element is visible
+    };
+
+    const observer = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                observer.unobserve(entry.target); // Stop observing the element once it has faded in
+            }
+        });
+    }, observerOptions);
+
+    fadeInElements.forEach(element => {
+        observer.observe(element);
+    });
+});
+    </script>
+</body>
+</html>
+

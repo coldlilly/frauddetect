@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check Phone Numbers</title>
+    <link rel="stylesheet" href="./style.css"/>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #e8f5e9; /* Light green background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        header {
+            background: #4caf50;
+            padding: 20px 0;
+            text-align: center;
+            color: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            margin-bottom: 20px;
+        }
+        #check-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            width: 400px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            transition: box-shadow 0.3s;
+        }
+        #check-section:hover {
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+        }
+        h2 {
+            color: #4caf50;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        input[type="text"], button {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        input[type="text"]:focus {
+            border-color: #4caf50;
+            outline: none;
+        }
+        button {
+            background: linear-gradient(135deg, #4caf50, #66bb6a);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transition: background 0.3s, transform 0.3s;
+        }
+        button:hover {
+            background: linear-gradient(135deg, #45a049, #5cbf62);
+            transform: translateY(-2px);
+        }
+        .results-container {
+            margin-top: 20px;
+            display: none; /* Initially hidden */
+            opacity: 0; /* Start hidden for fade effect */
+            animation: fadeIn 0.5s forwards; /* Fade-in animation */
+        }
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+        p {
+            margin: 5px 0;
+            color: #555;
+        }
+        .fade-in {
+            opacity: 0;
+            transform: translateX(-50px); /* Start from the left */
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateX(0); /* End at original position */
+        }
+        .fade-in-right {
+            transform: translateX(50px); /* Start from the right */
+        }
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            color: #666;
+        }
+    </style>
+</head>
+<body class="fade-in">
+    <header>
+        <h1 class="fade-in">Fraud Detection System</h1>
+    </header>
+
+    <section id="check-section" class="fade-in">
+        <h2>Check Phone Number</h2>
+        <form id="checkForm" onsubmit="return checkNumber(event)">
+            <label for="phoneNumber">Enter Phone Number:</label>
+            <input type="text" id="phoneNumber" required placeholder="e.g., +1234567890">
+            <button type="submit">Check</button>
+        </form>
+
+        <div id="results" class="results-container fade-in">
+            <h3>Results:</h3>
+            <p id="reportCount"></p>
+            <p id="fraudDescription"></p>
+            <p id="mostRecentReportDate"></p>
+        </div>
+    </section>
+
+    <footer class="fade-in">
+        <p>&copy; 2024 Fraud Detection System. All rights reserved.</p>
+    </footer>
+
+    <script>
+        const reports = [
+            {
+                phoneNumber: "1234567890",
+                reportCount: 5,
+                fraudDescription: "Claimed to be from a bank asking for personal information.",
+                mostRecentReportDate: "2024-10-12"
+            },
+            {
+                phoneNumber: "0987654321",
+                reportCount: 2,
+                fraudDescription: "Pretending to offer a lottery win.",
+                mostRecentReportDate: "2024-09-30"
+            },
+            {
+                phoneNumber: "6282774510",
+                reportCount: 5,
+                fraudDescription: "Claimed to be from a bank asking for personal information.",
+                mostRecentReportDate: "2024-10-12"
+            }
+        ];
+
+        function checkNumber(event) {
+            event.preventDefault();
+            const phoneNumber = document.getElementById('phoneNumber').value;
+            const resultDiv = document.getElementById('results');
+
+            const report = reports.find(r => r.phoneNumber === phoneNumber);
+            
+            if (report) {
+                document.getElementById('reportCount').textContent = `Number of Reports: ${report.reportCount}`;
+                document.getElementById('fraudDescription').textContent = `Description of Fraud: ${report.fraudDescription}`;
+                document.getElementById('mostRecentReportDate').textContent = `Date of Most Recent Report: ${report.mostRecentReportDate}`;
+            } else {
+                document.getElementById('reportCount').textContent = "No reports found for this number.";
+                document.getElementById('fraudDescription').textContent = "";
+                document.getElementById('mostRecentReportDate').textContent = "";
+            }
+            
+            // Show results and trigger fade-in effect
+            resultDiv.style.display = 'block';
+            resultDiv.style.opacity = 0; // Reset opacity
+            setTimeout(() => {
+                resultDiv.style.opacity = 1; // Fade in
+            }, 10); // Small timeout to trigger transition
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const fadeInElements = document.querySelectorAll('.fade-in, .fade-in-right');
+
+            const observerOptions = {
+                root: null, // Use the viewport as the root
+                threshold: 0.1 // Trigger when 10% of the element is visible
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target); // Stop observing the element once it has faded in
+                    }
+                });
+            }, observerOptions);
+
+            fadeInElements.forEach(element => {
+                observer.observe(element);
+            });
+        });
+    </script>
+</body>
+</html>
+

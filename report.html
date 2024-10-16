@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <section id="main" class="fade-in">
+        <section id="report-section">
+            <h2>Report a Fraud Call</h2>
+            <form id="reportForm" enctype="multipart/form-data">
+                <label for="phoneNumber">Phone Number:</label>
+                <input type="text" id="phoneNumber" required placeholder="e.g., +1234567890">
+
+                <label for="callDate">Date and Time of Call:</label>
+                <input type="datetime-local" id="callDate" required>
+
+                <label for="callDescription">Description of the Call:</label>
+                <textarea id="callDescription" rows="4" required placeholder="Provide details about the call..."></textarea>
+
+                <label for="fileUpload">Upload Supporting Documents or Recordings:</label>
+                <input type="file" id="fileUpload" accept=".pdf,.mp3,.wav,.jpg,.png">
+
+                <button class="button" type="submit">Submit</button>
+            </form>
+        </section>
+    </section>
+    <script src="./script.js"></script>
+</body>
+</html>
